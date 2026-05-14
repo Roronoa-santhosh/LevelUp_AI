@@ -1,0 +1,60 @@
+{
+  "info": {
+    "_postman_id": "377f3527-05ef-4fe2-9616-237c67b85609",
+    "name": "LevelUp",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "46289275"
+  },
+  "item": [
+    {
+      "name": "http://localhost:5000/api/analyze",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/api/analyze",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "api",
+            "analyze"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "http://localhost:5000/upload",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "pdfs",
+              "type": "file",
+              "uuid": "2f28b046-8573-409e-b975-d448cb913ab5",
+              "src": "/C:/Users/santhoshkumar/Downloads/chemical engi (1).pdf"
+            }
+          ]
+        },
+        "url": {
+          "raw": "http://localhost:5000/upload",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5000",
+          "path": [
+            "upload"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
