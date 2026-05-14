@@ -12,16 +12,20 @@ import {
 import {
   analyzeWithMarketData
 } from "../services/ragService.js";
+import { auth }
+from "../middleware/auth.js";
 
 const router = express.Router();
 
 router.get(
   "/analyze",
+    auth,
 
   async (req, res) => {
 
     try {
-
+        const userId =
+  req.user.id;
       // Get all stored docs
       const results =
         await getAllDocuments();
@@ -42,7 +46,8 @@ router.get(
       // Semantic retrieval
       const relevantChunks =
         await searchRelevantChunks(
-          queryEmbedding
+          queryEmbedding,
+          userId
         );
 
       // Final context

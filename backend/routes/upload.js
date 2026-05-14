@@ -6,10 +6,12 @@ import fs from "fs/promises";
 import { extractPdfText } from "../services/pdfService.js";
 import { chunkText } from "../services/chunkService.js";
 import { generateEmbedding } from "../services/embeddingService.js";
-import { storeEmbeddings, resetCollection } from "../services/chromaService.js";
+import { storeEmbeddings, deleteUserDocuments } from "../services/chromaService.js";
 import { cleanText } from "../services/cleanText.js";
+import { auth } from "../middleware/auth.js";
 
 const router = express.Router();
+
 
 const storage = multer.diskStorage({
 
@@ -60,6 +62,7 @@ async function cleanUploadsFolder(excludePaths = []) {
 
 router.post(
   "/",
+    auth,
   upload.array("pdfs", 10),
 
   async (req, res) => {
@@ -73,7 +76,12 @@ router.post(
         path.resolve(file.path)
       );
 
-      await resetCollection();
+     const userId =
+  req.user.id;
+
+await deleteUserDocuments(
+  userId
+);
       await cleanUploadsFolder(currentFiles);
 
       for (const file of req.files) {
@@ -118,7 +126,8 @@ const text =
         // Store in ChromaDB
         await storeEmbeddings(
           chunks,
-          embeddings
+          embeddings,
+          userId
         );
 
         console.log(

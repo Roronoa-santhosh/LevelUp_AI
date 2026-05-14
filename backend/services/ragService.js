@@ -3,9 +3,7 @@ import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
 export async function analyzeWithMarketData(syllabusText) {
 
-    console.log("TYPE:", typeof syllabusText);
-console.log("VALUE:", syllabusText);
-console.log("LENGTH:", syllabusText?.length);
+    // Model Initialization
 
   const model = new ChatGoogleGenerativeAI({
     apiKey: process.env.GEMINI_API_KEY,

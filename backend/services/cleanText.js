@@ -16,6 +16,15 @@ export function cleanText(text) {
 
     .replace(/\s{2,}/g, " ")
 
-    .trim();
+    .trim()  
+    .replace(
+    /PO1 PO2 PO3 PO4 PO5 PO6 PO7 PO8 PO9 PO10 PO11 PO12/gi,
+    ""
+  )
+.replace(
+  /Mapping of Programme Outcomes with Course Outcomes/gi,
+  ""
+);
+
 
 }

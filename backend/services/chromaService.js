@@ -1,20 +1,22 @@
 // chromaService.js
 
-import { ChromaClient } from "chromadb";
+import { ChromaClient }
+from "chromadb";
 
-const client = new ChromaClient({
-  host: "localhost",
-  port: 8000,
-  ssl: false,
-});
 // ======================================
-// OPTIONAL: RUN THIS ONLY ONCE
-// DELETE OLD BROKEN COLLECTION
+// CHROMA CLIENT
 // ======================================
 
-// await client.deleteCollection({
-//   name: "resumes",
-// });
+const client =
+  new ChromaClient({
+
+    host: "localhost",
+
+    port: 8000,
+
+    ssl: false,
+
+  });
 
 // ======================================
 // CREATE / GET COLLECTION
@@ -22,21 +24,30 @@ const client = new ChromaClient({
 
 async function getCollection() {
 
- const collection = await client.getOrCreateCollection({
-  name: "my_collection",
-  embeddingFunction: null,
-});
+  const collection =
+    await client.getOrCreateCollection({
+
+      name: "my_collection",
+
+      embeddingFunction: null,
+
+    });
 
   return collection;
+
 }
 
 // ======================================
 // STORE EMBEDDINGS
 // ======================================
 
-export async function storeEmbeddings(
+export async function
+storeEmbeddings(
+
   docs,
-  embeddings
+  embeddings,
+  userId
+
 ) {
 
   try {
@@ -44,27 +55,39 @@ export async function storeEmbeddings(
     const collection =
       await getCollection();
 
-  await collection.add({
+    await collection.add({
 
-  ids: docs.map(
-    (_, i) =>
-      `doc-${Date.now()}-${i}`
-  ),
+      ids: docs.map(
 
-  documents: docs.map(
-    (doc) => doc.pageContent
-  ),
+        (_, i) =>
 
-  embeddings: embeddings,
+          `doc-${Date.now()}-${i}`
 
-  metadatas: docs.map(
-    (doc) => ({
-      source:
-        doc.metadata.fileName || "unknown",
-    })
-  ),
+      ),
 
-});
+      documents: docs.map(
+
+        (doc) =>
+          doc.pageContent
+
+      ),
+
+      embeddings,
+
+      metadatas: docs.map(
+
+        (doc) => ({
+
+          source:
+            doc.metadata.fileName,
+
+          userId: userId,
+
+        })
+
+      ),
+
+    });
 
     console.log(
       "Stored in ChromaDB"
@@ -73,28 +96,49 @@ export async function storeEmbeddings(
   } catch (error) {
 
     console.error(
+
       "Store Embedding Error:",
+
       error
+
     );
 
   }
+
 }
-export async function resetCollection() {
+
+// ======================================
+// DELETE USER DOCUMENTS
+// ======================================
+
+export async function
+deleteUserDocuments(userId) {
 
   try {
 
-    await client.deleteCollection({
-      name: "my_collection",
+    const collection =
+      await getCollection();
+
+    await collection.delete({
+
+      where: {
+        userId: userId
+      }
+
     });
 
     console.log(
-      "Old collection deleted"
+      "Old user vectors deleted"
     );
 
   } catch (error) {
 
-    console.log(
-      "Collection not found"
+    console.error(
+
+      "Delete User Docs Error:",
+
+      error
+
     );
 
   }
@@ -105,7 +149,8 @@ export async function resetCollection() {
 // GET ALL DOCUMENTS
 // ======================================
 
-export async function getAllDocuments() {
+export async function
+getAllDocuments() {
 
   try {
 
@@ -120,20 +165,29 @@ export async function getAllDocuments() {
   } catch (error) {
 
     console.error(
+
       "Get Documents Error:",
+
       error
+
     );
 
     throw error;
+
   }
+
 }
 
 // ======================================
 // SEMANTIC SEARCH
 // ======================================
 
-export async function searchRelevantChunks(
-  queryEmbedding
+export async function
+searchRelevantChunks(
+
+  queryEmbedding,
+  userId
+
 ) {
 
   try {
@@ -148,6 +202,10 @@ export async function searchRelevantChunks(
           queryEmbedding
         ],
 
+        where: {
+          userId: userId
+        },
+
         nResults: 5,
 
       });
@@ -157,10 +215,15 @@ export async function searchRelevantChunks(
   } catch (error) {
 
     console.error(
+
       "Semantic Search Error:",
+
       error
+
     );
 
     throw error;
+
   }
+
 }
