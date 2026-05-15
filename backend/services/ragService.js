@@ -115,7 +115,7 @@ Return ONLY the TOP 5 MOST RELEVANT career roles.
 For each role provide:
 - role title
 - match percentage
-- realistic 2026 salary range
+- realistic 2026 salary range in rupees
 - market demand
 - explicit syllabus-based justification
 
